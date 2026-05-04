@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Phone, MessageSquare, Wrench, Home as HomeIcon, Building2, Paintbrush, Droplets, CheckCircle, Shield } from "lucide-react";
 
 export default function Home() {
