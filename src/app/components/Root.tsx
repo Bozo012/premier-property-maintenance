@@ -24,7 +24,7 @@ export default function Root() {
             <Link to="/" className="flex items-center space-x-2">
               {/* Use the provided logo image instead of the orange P box */}
               <img
-                src="/ppmppmlogo.png"
+                src="/ppmlogo.png"
                 alt="Premier Property Maintenance logo"
                 className="w-10 h-10 object-contain"
               />
@@ -122,7 +122,7 @@ export default function Root() {
             <div>
               {/* Logo in footer */}
               <img
-                src="/ppmppmlogo.png"
+                src="/ppmlogo.png"
                 alt="Premier Property Maintenance logo"
                 className="w-8 h-8 mb-2 rounded-lg object-cover"
               />
