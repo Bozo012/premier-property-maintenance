@@ -21,7 +21,7 @@ export default function HowItWorks() {
       title: "CONTACT US",
       description: "Reach out via phone, text, or online form",
       details: [
-        "Call or text us at (123) 456-7890",
+        "Call or text us at (859) 912-0526",
         "Submit a request through our online form",
         "Available 24/7 for emergencies",
         "Get immediate acknowledgment",
@@ -128,7 +128,7 @@ export default function HowItWorks() {
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Call (123) 456-7890</span>
+                <span>Call (859) 912-0526</span>
               </a>
               <Link
                 to="/request-service"
@@ -201,7 +201,7 @@ export default function HowItWorks() {
                 href="tel:+1234567890"
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
-                (123) 456-7890
+                (859) 912-0526
               </a>
             </div>
 
@@ -280,7 +280,7 @@ export default function HowItWorks() {
             <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6">
               <h3 className="text-xl mb-2">Do you offer emergency services?</h3>
               <p className="text-gray-400">
-                Yes! We're available 24/7 for emergency situations like water leaks, electrical issues, or lock-outs. Call anytime at (123) 456-7890.
+                Yes! We're available 24/7 for emergency situations like water leaks, electrical issues, or lock-outs. Call anytime at (859) 912-0526.
               </p>
             </div>
 
@@ -314,7 +314,7 @@ export default function HowItWorks() {
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call (123) 456-7890</span>
+              <span>Call (859) 912-0526</span>
             </a>
             <a
               href="sms:+1234567890"

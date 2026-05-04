@@ -51,7 +51,7 @@ export default function NotFound() {
         <p className="text-gray-500 text-sm">
           Need help? Contact us at{" "}
           <a href="tel:+1234567890" className="text-orange-500 hover:text-orange-400">
-            (123) 456-7890
+            (859) 912-0526
           </a>
         </p>
       </div>

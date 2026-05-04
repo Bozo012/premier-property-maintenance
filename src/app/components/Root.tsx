@@ -22,9 +22,12 @@ export default function Root() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xl">P</span>
-              </div>
+              {/* Use the provided logo image instead of the orange P box */}
+              <img
+                src="/logo.png"
+                alt="Premier Property Maintenance logo"
+                className="w-10 h-10 object-contain"
+              />
               <span className="text-xl">Premier Property Maintenance</span>
             </Link>
 
@@ -46,11 +49,11 @@ export default function Root() {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <a
-                href="tel:+1234567890"
+                href="tel:8599220526"
                 className="flex items-center space-x-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>(123) 456-7890</span>
+                <span>(859) 912-0526</span>
               </a>
               <Link
                 to="/request-service"
@@ -88,11 +91,11 @@ export default function Root() {
               ))}
               <div className="pt-4 space-y-3">
                 <a
-                  href="tel:+1234567890"
+                  href="tel:8599220526"
                   className="flex items-center justify-center space-x-2 w-full px-6 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>(123) 456-7890</span>
+                  <span>(859) 912-0526</span>
                 </a>
                 <Link
                   to="/request-service"
@@ -117,6 +120,12 @@ export default function Root() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
+              {/* Logo in footer */}
+              <img
+                src="/logo.png"
+                alt="Premier Property Maintenance logo"
+                className="w-8 h-8 mb-2 rounded-lg object-cover"
+              />
               <h3 className="text-lg mb-4">Premier Property Maintenance</h3>
               <p className="text-gray-400 text-sm">
                 Professional property maintenance and repair services for residential and commercial properties.
@@ -142,7 +151,7 @@ export default function Root() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4" />
-                  <a href="tel:+1234567890" className="hover:text-orange-500">(123) 456-7890</a>
+                  <a href="tel:8599220526" className="hover:text-orange-500">(859) 912-0526</a>
                 </li>
                 <li className="flex items-center space-x-2">
                   <Mail className="w-4 h-4" />

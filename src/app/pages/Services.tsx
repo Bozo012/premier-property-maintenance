@@ -180,7 +180,7 @@ export default function Services() {
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Call (123) 456-7890</span>
+                <span>Call (859) 912-0526</span>
               </a>
               <Link
                 to="/request-service"

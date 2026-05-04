@@ -55,7 +55,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-gray-400 text-sm">(123) 456-7890 • Available 24/7</p>
+            <p className="text-gray-400 text-sm">(859) 912-0526 • Available 24/7</p>
           </div>
         </div>
       </section>
@@ -243,7 +243,7 @@ export default function Home() {
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 text-lg rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call (123) 456-7890</span>
+              <span>Call (859) 912-0526</span>
             </a>
             <a
               href="sms:+1234567890"

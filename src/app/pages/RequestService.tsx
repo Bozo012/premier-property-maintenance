@@ -20,7 +20,7 @@ export default function RequestService() {
             Thank you for your service request. We'll contact you within 2 hours.
           </p>
           <p className="text-gray-400 mb-8">
-            For immediate assistance, call us at <a href="tel:+1234567890" className="text-orange-500">(123) 456-7890</a>
+            For immediate assistance, call us at <a href="tel:+1234567890" className="text-orange-500">(859) 912-0526</a>
           </p>
           <button
             onClick={() => {
@@ -139,7 +139,7 @@ export default function RequestService() {
                         type="tel"
                         required
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
-                        placeholder="(123) 456-7890"
+                        placeholder="(859) 912-0526"
                       />
                     </div>
                     <div>
