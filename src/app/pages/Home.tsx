@@ -12,7 +12,7 @@ export default function Home() {
   ];
 
   const stats = [
-    { value: "5,000+", label: "Properties Serviced" },
+    
     { value: "24/7", label: "Emergency Response" },
     { value: "100%", label: "Satisfaction Rate" },
     { value: "< 2hrs", label: "Average Response" },
