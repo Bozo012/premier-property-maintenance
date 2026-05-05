@@ -63,7 +63,7 @@ export default function Home() {
       {/* Stats Panel */}
       <section className="bg-[#0f0f0f] border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {stats.map((stat, index) => (
               <div key={index} className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6 text-center">
                 <div className="text-3xl text-orange-500 mb-2">{stat.value}</div>
