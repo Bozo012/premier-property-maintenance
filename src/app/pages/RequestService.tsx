@@ -1,13 +1,136 @@
-import { useState } from "react";
-import { Phone, MessageSquare, Upload, CheckCircle } from "lucide-react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
+import { Phone, MessageSquare, CheckCircle } from "lucide-react";
+
+type ServiceRequestPayload = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  emailAddress: string;
+  preferredContactMethod: string;
+  customerType: string;
+  addressLine1: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  propertyType: string;
+  accessInstructions: string;
+  serviceCategory: string;
+  priorityLevel: string;
+  problemDescription: string;
+  preferredDateTime: string;
+  additionalNotes: string;
+};
+
+const initialFormData: ServiceRequestPayload = {
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  emailAddress: "",
+  preferredContactMethod: "",
+  customerType: "",
+  addressLine1: "",
+  city: "",
+  state: "",
+  zipCode: "",
+  propertyType: "",
+  accessInstructions: "",
+  serviceCategory: "",
+  priorityLevel: "",
+  problemDescription: "",
+  preferredDateTime: "",
+  additionalNotes: "",
+};
+
+const requiredFieldsByStep: Record<number, Array<keyof ServiceRequestPayload>> = {
+  1: ["firstName", "lastName", "phoneNumber", "emailAddress", "preferredContactMethod", "customerType"],
+  2: ["addressLine1", "city", "state", "zipCode", "propertyType"],
+  3: ["serviceCategory", "priorityLevel", "problemDescription"],
+};
+
+const trimPayload = (payload: ServiceRequestPayload): ServiceRequestPayload =>
+  Object.fromEntries(
+    Object.entries(payload).map(([key, value]) => [key, value.trim()]),
+  ) as ServiceRequestPayload;
 
 export default function RequestService() {
   const [formStep, setFormStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState<ServiceRequestPayload>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
+  const updateField = (field: keyof ServiceRequestPayload) => (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => {
+    setFormData((currentFormData) => ({
+      ...currentFormData,
+      [field]: event.target.value,
+    }));
+    setErrorMessage("");
+  };
+
+  const validateStep = (step: number) => requiredFieldsByStep[step].every((field) => formData[field].trim());
+
+  const goToStep = (nextStep: number) => {
+    if (nextStep > formStep && !validateStep(formStep)) {
+      setErrorMessage("Please complete all required fields before continuing.");
+      return;
+    }
+
+    setErrorMessage("");
+    setFormStep(nextStep);
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setErrorMessage("");
+
+    if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+      setErrorMessage("Please complete all required fields before submitting your request.");
+      return;
+    }
+
+    const crmApiUrl = import.meta.env.VITE_CRM_API_URL;
+
+    if (!crmApiUrl) {
+      setErrorMessage("Service requests are temporarily unavailable. Please call us for immediate assistance.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${crmApiUrl}/api/v1/service-requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(trimPayload(formData)),
+      });
+
+      let responseBody: { success?: boolean; message?: string; error?: string } | null = null;
+      const contentType = response.headers.get("content-type");
+
+      if (contentType?.includes("application/json")) {
+        responseBody = await response.json();
+      }
+
+      if (!response.ok || responseBody?.success === false) {
+        throw new Error(responseBody?.message || responseBody?.error || "Unable to submit your service request right now.");
+      }
+
+      setSubmitted(true);
+      setFormData(initialFormData);
+      setFormStep(1);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to submit your service request right now. Please try again or call us for assistance.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -26,6 +149,7 @@ export default function RequestService() {
             onClick={() => {
               setSubmitted(false);
               setFormStep(1);
+              setErrorMessage("");
             }}
             className="px-8 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
           >
@@ -105,6 +229,12 @@ export default function RequestService() {
 
           {/* Form */}
           <div className="bg-[#0f0f0f] border border-gray-800 rounded-lg p-8">
+            {errorMessage && (
+              <div className="mb-6 rounded-lg border border-red-500/60 bg-red-500/10 px-4 py-3 text-red-200" role="alert">
+                {errorMessage}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Step 1: Contact Information */}
               {formStep === 1 && (
@@ -113,19 +243,27 @@ export default function RequestService() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">First Name *</label>
+                      <label htmlFor="firstName" className="block text-sm text-gray-400 mb-2">First Name *</label>
                       <input
+                        id="firstName"
+                        name="firstName"
                         type="text"
                         required
+                        value={formData.firstName}
+                        onChange={updateField("firstName")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="John"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">Last Name *</label>
+                      <label htmlFor="lastName" className="block text-sm text-gray-400 mb-2">Last Name *</label>
                       <input
+                        id="lastName"
+                        name="lastName"
                         type="text"
                         required
+                        value={formData.lastName}
+                        onChange={updateField("lastName")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="Doe"
                       />
@@ -134,19 +272,27 @@ export default function RequestService() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">Phone Number *</label>
+                      <label htmlFor="phoneNumber" className="block text-sm text-gray-400 mb-2">Phone Number *</label>
                       <input
+                        id="phoneNumber"
+                        name="phoneNumber"
                         type="tel"
                         required
+                        value={formData.phoneNumber}
+                        onChange={updateField("phoneNumber")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="(859) 912-0526"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">Email Address *</label>
+                      <label htmlFor="emailAddress" className="block text-sm text-gray-400 mb-2">Email Address *</label>
                       <input
+                        id="emailAddress"
+                        name="emailAddress"
                         type="email"
                         required
+                        value={formData.emailAddress}
+                        onChange={updateField("emailAddress")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="john@example.com"
                       />
@@ -154,9 +300,13 @@ export default function RequestService() {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Preferred Contact Method *</label>
+                    <label htmlFor="preferredContactMethod" className="block text-sm text-gray-400 mb-2">Preferred Contact Method *</label>
                     <select
+                      id="preferredContactMethod"
+                      name="preferredContactMethod"
                       required
+                      value={formData.preferredContactMethod}
+                      onChange={updateField("preferredContactMethod")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                     >
                       <option value="">Select method...</option>
@@ -167,9 +317,13 @@ export default function RequestService() {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Customer Type *</label>
+                    <label htmlFor="customerType" className="block text-sm text-gray-400 mb-2">Customer Type *</label>
                     <select
+                      id="customerType"
+                      name="customerType"
                       required
+                      value={formData.customerType}
+                      onChange={updateField("customerType")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                     >
                       <option value="">Select type...</option>
@@ -182,7 +336,7 @@ export default function RequestService() {
 
                   <button
                     type="button"
-                    onClick={() => setFormStep(2)}
+                    onClick={() => goToStep(2)}
                     className="w-full px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
                   >
                     Next: Property Information
@@ -196,10 +350,14 @@ export default function RequestService() {
                   <h2 className="text-2xl mb-6 pb-4 border-b border-gray-800">PROPERTY INFORMATION</h2>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Property Address *</label>
+                    <label htmlFor="addressLine1" className="block text-sm text-gray-400 mb-2">Property Address *</label>
                     <input
+                      id="addressLine1"
+                      name="addressLine1"
                       type="text"
                       required
+                      value={formData.addressLine1}
+                      onChange={updateField("addressLine1")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                       placeholder="123 Main Street"
                     />
@@ -207,28 +365,40 @@ export default function RequestService() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-1">
-                      <label className="block text-sm text-gray-400 mb-2">City *</label>
+                      <label htmlFor="city" className="block text-sm text-gray-400 mb-2">City *</label>
                       <input
+                        id="city"
+                        name="city"
                         type="text"
                         required
+                        value={formData.city}
+                        onChange={updateField("city")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="City"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">State *</label>
+                      <label htmlFor="state" className="block text-sm text-gray-400 mb-2">State *</label>
                       <input
+                        id="state"
+                        name="state"
                         type="text"
                         required
+                        value={formData.state}
+                        onChange={updateField("state")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="State"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">ZIP Code *</label>
+                      <label htmlFor="zipCode" className="block text-sm text-gray-400 mb-2">ZIP Code *</label>
                       <input
+                        id="zipCode"
+                        name="zipCode"
                         type="text"
                         required
+                        value={formData.zipCode}
+                        onChange={updateField("zipCode")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="12345"
                       />
@@ -237,9 +407,13 @@ export default function RequestService() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">Property Type *</label>
+                      <label htmlFor="propertyType" className="block text-sm text-gray-400 mb-2">Property Type *</label>
                       <select
+                        id="propertyType"
+                        name="propertyType"
                         required
+                        value={formData.propertyType}
+                        onChange={updateField("propertyType")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                       >
                         <option value="">Select type...</option>
@@ -251,9 +425,13 @@ export default function RequestService() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-400 mb-2">Access Instructions</label>
+                      <label htmlFor="accessInstructions" className="block text-sm text-gray-400 mb-2">Access Instructions</label>
                       <input
+                        id="accessInstructions"
+                        name="accessInstructions"
                         type="text"
+                        value={formData.accessInstructions}
+                        onChange={updateField("accessInstructions")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                         placeholder="Gate code, lockbox, etc."
                       />
@@ -263,14 +441,14 @@ export default function RequestService() {
                   <div className="flex gap-4">
                     <button
                       type="button"
-                      onClick={() => setFormStep(1)}
+                      onClick={() => goToStep(1)}
                       className="flex-1 px-8 py-4 border border-gray-700 text-gray-300 hover:border-orange-500 hover:text-orange-500 rounded-lg transition-colors"
                     >
                       Back
                     </button>
                     <button
                       type="button"
-                      onClick={() => setFormStep(3)}
+                      onClick={() => goToStep(3)}
                       className="flex-1 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
                     >
                       Next: Service Details
@@ -285,9 +463,13 @@ export default function RequestService() {
                   <h2 className="text-2xl mb-6 pb-4 border-b border-gray-800">SERVICE DETAILS</h2>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Service Category *</label>
+                    <label htmlFor="serviceCategory" className="block text-sm text-gray-400 mb-2">Service Category *</label>
                     <select
+                      id="serviceCategory"
+                      name="serviceCategory"
                       required
+                      value={formData.serviceCategory}
+                      onChange={updateField("serviceCategory")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                     >
                       <option value="">Select category...</option>
@@ -303,9 +485,13 @@ export default function RequestService() {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Priority Level *</label>
+                    <label htmlFor="priorityLevel" className="block text-sm text-gray-400 mb-2">Priority Level *</label>
                     <select
+                      id="priorityLevel"
+                      name="priorityLevel"
                       required
+                      value={formData.priorityLevel}
+                      onChange={updateField("priorityLevel")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                     >
                       <option value="">Select priority...</option>
@@ -317,36 +503,39 @@ export default function RequestService() {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Problem Description *</label>
+                    <label htmlFor="problemDescription" className="block text-sm text-gray-400 mb-2">Problem Description *</label>
                     <textarea
+                      id="problemDescription"
+                      name="problemDescription"
                       required
                       rows={5}
+                      value={formData.problemDescription}
+                      onChange={updateField("problemDescription")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                       placeholder="Please describe the issue in detail..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">Preferred Date/Time</label>
+                    <label htmlFor="preferredDateTime" className="block text-sm text-gray-400 mb-2">Preferred Date/Time</label>
                     <input
+                      id="preferredDateTime"
+                      name="preferredDateTime"
                       type="datetime-local"
+                      value={formData.preferredDateTime}
+                      onChange={updateField("preferredDateTime")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 mb-4">Upload Photos (Optional)</label>
-                    <div className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center hover:border-orange-500 transition-colors cursor-pointer">
-                      <Upload className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                      <p className="text-gray-400 mb-2">Click to upload or drag and drop</p>
-                      <p className="text-sm text-gray-500">PNG, JPG up to 10MB</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-400 mb-2">Additional Notes</label>
+                    <label htmlFor="additionalNotes" className="block text-sm text-gray-400 mb-2">Additional Notes</label>
                     <textarea
+                      id="additionalNotes"
+                      name="additionalNotes"
                       rows={3}
+                      value={formData.additionalNotes}
+                      onChange={updateField("additionalNotes")}
                       className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                       placeholder="Any other information we should know..."
                     />
@@ -355,16 +544,18 @@ export default function RequestService() {
                   <div className="flex gap-4">
                     <button
                       type="button"
-                      onClick={() => setFormStep(2)}
-                      className="flex-1 px-8 py-4 border border-gray-700 text-gray-300 hover:border-orange-500 hover:text-orange-500 rounded-lg transition-colors"
+                      onClick={() => goToStep(2)}
+                      disabled={isSubmitting}
+                      className="flex-1 px-8 py-4 border border-gray-700 text-gray-300 hover:border-orange-500 hover:text-orange-500 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       Back
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                      disabled={isSubmitting}
+                      className="flex-1 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      Submit Request
+                      {isSubmitting ? "Submitting..." : "Submit Request"}
                     </button>
                   </div>
                 </div>
