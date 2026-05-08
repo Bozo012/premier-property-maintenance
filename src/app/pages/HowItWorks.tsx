@@ -124,7 +124,7 @@ export default function HowItWorks() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="tel:+1234567890"
+                href="tel:8599120526"
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
@@ -198,7 +198,7 @@ export default function HowItWorks() {
                 Speak directly with our team for immediate assistance
               </p>
               <a
-                href="tel:+1234567890"
+                href="tel:8599120526"
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 (859) 912-0526
@@ -212,7 +212,7 @@ export default function HowItWorks() {
                 Quick and convenient communication via text message
               </p>
               <a
-                href="sms:+1234567890"
+                href="sms:8599120526"
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 Text Us Now
@@ -310,14 +310,14 @@ export default function HowItWorks() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="tel:+1234567890"
+              href="tel:8599120526"
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
               <span>Call (859) 912-0526</span>
             </a>
             <a
-              href="sms:+1234567890"
+              href="sms:8599120526"
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <MessageSquare className="w-5 h-5" />
