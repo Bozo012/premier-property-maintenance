@@ -49,7 +49,7 @@ export default function Root() {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <a
-                href="tel:8599220526"
+                href="tel:8599120526"
                 className="flex items-center space-x-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
@@ -91,7 +91,7 @@ export default function Root() {
               ))}
               <div className="pt-4 space-y-3">
                 <a
-                  href="tel:8599220526"
+                  href="tel:8599120526"
                   className="flex items-center justify-center space-x-2 w-full px-6 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   <Phone className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function Root() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4" />
-                  <a href="tel:8599220526" className="hover:text-orange-500">(859) 912-0526</a>
+                  <a href="tel:8599120526" className="hover:text-orange-500">(859) 912-0526</a>
                 </li>
                 <li className="flex items-center space-x-2">
                   <Mail className="w-4 h-4" />
