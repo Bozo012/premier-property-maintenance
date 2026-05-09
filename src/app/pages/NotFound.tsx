@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Home, Phone, Search } from "lucide-react";
 
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "../config/contact";
+
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center px-4">
@@ -39,7 +41,7 @@ export default function NotFound() {
               Request Service
             </Link>
             <a
-              href="tel:+1234567890"
+              href={CONTACT_PHONE_HREF}
               className="flex items-center justify-center space-x-2 px-6 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
@@ -50,8 +52,8 @@ export default function NotFound() {
 
         <p className="text-gray-500 text-sm">
           Need help? Contact us at{" "}
-          <a href="tel:+1234567890" className="text-orange-500 hover:text-orange-400">
-            (859) 912-0526
+          <a href={CONTACT_PHONE_HREF} className="text-orange-500 hover:text-orange-400">
+            {CONTACT_PHONE_DISPLAY}
           </a>
         </p>
       </div>

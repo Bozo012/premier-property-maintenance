@@ -1,0 +1,5 @@
+export const CONTACT_PHONE_DISPLAY = "(859) 912-0526";
+export const CONTACT_PHONE_DIGITS = "8599120526";
+export const CONTACT_PHONE_E164 = "+18599120526";
+export const CONTACT_PHONE_HREF = `tel:${CONTACT_PHONE_E164}`;
+export const CONTACT_SMS_HREF = `sms:${CONTACT_PHONE_E164}`;
