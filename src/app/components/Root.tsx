@@ -2,6 +2,8 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { Phone, Mail, Menu, X } from "lucide-react";
 import { useState } from "react";
 
+import { CONTACT_EMAIL, CONTACT_EMAIL_HREF, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "../config/contact";
+
 export default function Root() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,11 +51,11 @@ export default function Root() {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <a
-                href="tel:8599220526"
+                href={CONTACT_PHONE_HREF}
                 className="flex items-center space-x-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>(859) 912-0526</span>
+                <span>{CONTACT_PHONE_DISPLAY}</span>
               </a>
               <Link
                 to="/request-service"
@@ -91,11 +93,11 @@ export default function Root() {
               ))}
               <div className="pt-4 space-y-3">
                 <a
-                  href="tel:8599220526"
+                  href={CONTACT_PHONE_HREF}
                   className="flex items-center justify-center space-x-2 w-full px-6 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>(859) 912-0526</span>
+                  <span>{CONTACT_PHONE_DISPLAY}</span>
                 </a>
                 <Link
                   to="/request-service"
@@ -151,12 +153,12 @@ export default function Root() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4" />
-                  <a href="tel:8599220526" className="hover:text-orange-500">(859) 912-0526</a>
+                  <a href={CONTACT_PHONE_HREF} className="hover:text-orange-500">{CONTACT_PHONE_DISPLAY}</a>
                 </li>
                 <li className="flex items-center space-x-2">
                   <Mail className="w-4 h-4" />
-                  <a href="mailto:info@premierproperty.com" className="hover:text-orange-500">
-                    info@premierproperty.com
+                  <a href={CONTACT_EMAIL_HREF} className="hover:text-orange-500">
+                    {CONTACT_EMAIL}
                   </a>
                 </li>
               </ul>

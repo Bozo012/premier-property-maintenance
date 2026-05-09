@@ -13,6 +13,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+import { CONTACT_EMAIL_HREF } from "../config/contact";
+
 export default function CustomerPortal() {
   const features = [
     {
@@ -258,7 +260,7 @@ export default function CustomerPortal() {
               Request Your First Service
             </Link>
             <a
-              href="mailto:info@premierproperty.com"
+              href={CONTACT_EMAIL_HREF}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
               <Mail className="w-5 h-5" />

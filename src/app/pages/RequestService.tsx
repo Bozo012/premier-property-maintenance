@@ -1,6 +1,8 @@
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Phone, MessageSquare, CheckCircle } from "lucide-react";
 
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+
 type ServiceRequestPayload = {
   firstName: string;
   lastName: string;
@@ -143,7 +145,7 @@ export default function RequestService() {
             Thank you for your service request. We'll contact you within 2 hours.
           </p>
           <p className="text-gray-400 mb-8">
-            For immediate assistance, call us at <a href="tel:+1234567890" className="text-orange-500">(859) 912-0526</a>
+            For immediate assistance, call us at <a href={CONTACT_PHONE_HREF} className="text-orange-500">{CONTACT_PHONE_DISPLAY}</a>
           </p>
           <button
             onClick={() => {
@@ -169,14 +171,14 @@ export default function RequestService() {
             <span className="text-white">Need immediate assistance?</span>
             <div className="flex items-center gap-4">
               <a
-                href="tel:+1234567890"
+                href={CONTACT_PHONE_HREF}
                 className="flex items-center space-x-2 px-6 py-2 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 <span>Call Now</span>
               </a>
               <a
-                href="sms:+1234567890"
+                href={CONTACT_SMS_HREF}
                 className="flex items-center space-x-2 px-6 py-2 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -281,7 +283,7 @@ export default function RequestService() {
                         value={formData.phoneNumber}
                         onChange={updateField("phoneNumber")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
-                        placeholder="(859) 912-0526"
+                        placeholder={CONTACT_PHONE_DISPLAY}
                       />
                     </div>
                     <div>

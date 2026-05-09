@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Phone, MessageSquare, Wrench, Home as HomeIcon, Building2, Paintbrush, Droplets, CheckCircle, Shield } from "lucide-react";
 
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+
 export default function Home() {
   const services = [
     { icon: Wrench, title: "General Repairs", desc: "Quick fixes for any property issue" },
@@ -34,14 +36,14 @@ export default function Home() {
             {/* Primary CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <a
-                href="tel:+1234567890"
+                href={CONTACT_PHONE_HREF}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
                 <span>Call Now</span>
               </a>
               <a
-                href="sms:+1234567890"
+                href={CONTACT_SMS_HREF}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg rounded-lg transition-colors"
               >
                 <MessageSquare className="w-5 h-5" />
@@ -55,7 +57,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <p className="text-gray-400 text-sm">(859) 912-0526 • Available 24/7</p>
+            <p className="text-gray-400 text-sm">{CONTACT_PHONE_DISPLAY} • Available 24/7</p>
           </div>
         </div>
       </section>
@@ -239,14 +241,14 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="tel:+1234567890"
+              href={CONTACT_PHONE_HREF}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 text-lg rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call (859) 912-0526</span>
+              <span>Call {CONTACT_PHONE_DISPLAY}</span>
             </a>
             <a
-              href="sms:+1234567890"
+              href={CONTACT_SMS_HREF}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 text-lg rounded-lg transition-colors"
             >
               <MessageSquare className="w-5 h-5" />
