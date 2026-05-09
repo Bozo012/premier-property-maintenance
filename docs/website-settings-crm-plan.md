@@ -1,15 +1,26 @@
 # Website Settings CRM Integration Plan
 
 ## Goal
-Keep the public website lightweight while moving frequently edited business content into the CRM. The CRM should become the source of truth for contact details, hero messaging, promotions, and featured service cards; the React/Vercel site should continue to own page structure, routing, layout, and visual presentation.
+Keep the public website lightweight while moving frequently edited business content into the CRM. The CRM should be the source of truth for contact details, hero messaging, promotions, and featured service cards; this React/Vercel website should continue to own page structure, routing, layout, styling, and safe rendering fallbacks.
 
-## Preconditions
+## Repository ownership boundary
+This repo is the public website frontend only. It may document the website-facing contract and consume published content, but it should not own database schema, CRM admin screens, or backend API implementation.
+
+The canonical implementation belongs in the Premier-CRM repo, including:
+
+- Supabase tables, migrations, RLS policies, and seed data.
+- CRM admin UI at `/app/settings/website`.
+- Any authenticated CRUD services for staff editing.
+- Any public read API or Supabase publication strategy.
+
+## Preconditions for this website PR
 - Freeze any cleanup pull request until `src/app/pages/RequestService.tsx` is verified against the main branch because it posts lead/service-request data to the CRM API.
 - Keep the contact-normalisation work small and isolated: only consolidate phone/email values and fix mismatched `tel:`/`sms:` links.
-- Ship the settings feature in phases so the public site always has local fallbacks if Supabase content is missing.
+- Do not change service-request POST behavior in this PR beyond contact display/link cleanup.
+- Ship future settings consumption in phases so the public site always has local fallbacks if CRM/Supabase content is unavailable.
 
-## CRM-managed content
-The first pass should make these fields editable from the CRM:
+## CRM-managed content contract
+The first CRM pass should make these fields available to the website:
 
 ### `website_settings`
 - Public phone number display text.
@@ -33,30 +44,31 @@ The first pass should make these fields editable from the CRM:
 - Sort order and active flag.
 
 ## Static website responsibilities
-These should remain in code for maintainability and speed:
+These should remain in this repo for maintainability and speed:
 
 - Page templates, route definitions, and layout components.
 - Form structure and validation for service requests.
 - Component styling, spacing, and responsive behavior.
-- Approved icon mappings and any safety constraints on outbound links.
-- Hardcoded fallback content used if Supabase is unavailable.
+- Approved icon mappings and safety constraints on outbound links.
+- Hardcoded fallback content used if CRM/Supabase content is unavailable.
 
-## Public-site data flow
-1. Create read-optimized Supabase tables for website settings, promotions, and service highlights.
-2. Add Row Level Security policies that allow public anonymous `select` access only to active/published website content.
-3. In the CRM admin area, add `/app/settings/website` with simple CRUD forms that write to those tables.
-4. In the React/Vercel app, add a small website-content client that fetches from Supabase using the anon key.
-5. Load content at the page/component boundary, merge it with local fallbacks, and render the same presentational components.
-6. Cache or revalidate content at a short interval if the site later moves to server-side rendering; for the current Vite app, keep client fetches small and resilient.
+## Future public-site data flow
+1. The CRM repo creates and owns read-optimized tables/API for website settings, promotions, and service highlights.
+2. The CRM repo publishes only safe active content for public website consumption.
+3. The website repo adds a small website-content client that reads the published content using the agreed public contract.
+4. The website loads content at the page/component boundary, merges it with local fallbacks, and renders the same presentational components.
+5. If the site later moves to server-side rendering, cache or revalidate content at a short interval; for the current Vite app, keep client fetches small and resilient.
 
-## Admin UI scope for `/app/settings/website`
+## Future CRM admin UI scope
+The separate CRM PR should cover:
+
 - Settings form: single-record editor for phone, email, hero, CTA, and SEO defaults.
 - Promotions list: create/edit/archive promotions with date windows.
 - Service highlights list: create/edit/reorder/archive highlighted services.
 - Validation: require safe CTA paths or approved external URLs; validate email and phone URI formatting.
 - Auditability: store timestamps and updated-by fields where the CRM already tracks authenticated users.
 
-## Future CMS additions
+## Deferred CMS additions
 Defer these until the simple settings model proves useful:
 
 - `website_pages` for full page-level CMS control.
