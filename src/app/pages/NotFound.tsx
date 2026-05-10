@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
 import { Home, Phone, Search } from "lucide-react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref } from "../config/contact";
 
 export default function NotFound() {
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
+
   return (
     <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center px-4">
       <div className="max-w-2xl w-full text-center">
@@ -38,22 +44,22 @@ export default function NotFound() {
               to="/request-service"
               className="px-6 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
-              Request Service
+              {settings.requestServiceCtaLabel}
             </Link>
             <a
-              href={CONTACT_PHONE_HREF}
+              href={phoneHref}
               className="flex items-center justify-center space-x-2 px-6 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call Us</span>
+              <span>{settings.callCtaLabel}</span>
             </a>
           </div>
         </div>
 
         <p className="text-gray-500 text-sm">
           Need help? Contact us at{" "}
-          <a href={CONTACT_PHONE_HREF} className="text-orange-500 hover:text-orange-400">
-            {CONTACT_PHONE_DISPLAY}
+          <a href={phoneHref} className="text-orange-500 hover:text-orange-400">
+            {settings.phoneDisplay}
           </a>
         </p>
       </div>

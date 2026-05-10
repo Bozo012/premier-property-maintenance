@@ -1,7 +1,8 @@
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { Phone, MessageSquare, CheckCircle } from "lucide-react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref, buildSmsHref } from "../config/contact";
 
 type ServiceRequestPayload = {
   firstName: string;
@@ -55,6 +56,11 @@ const trimPayload = (payload: ServiceRequestPayload): ServiceRequestPayload =>
   ) as ServiceRequestPayload;
 
 export default function RequestService() {
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
+  const smsHref = buildSmsHref(settings.phoneE164);
   const [formStep, setFormStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<ServiceRequestPayload>(initialFormData);
@@ -145,7 +151,7 @@ export default function RequestService() {
             Thank you for your service request. We'll contact you within 2 hours.
           </p>
           <p className="text-gray-400 mb-8">
-            For immediate assistance, call us at <a href={CONTACT_PHONE_HREF} className="text-orange-500">{CONTACT_PHONE_DISPLAY}</a>
+            For immediate assistance, call us at <a href={phoneHref} className="text-orange-500">{settings.phoneDisplay}</a>
           </p>
           <button
             onClick={() => {
@@ -171,18 +177,18 @@ export default function RequestService() {
             <span className="text-white">Need immediate assistance?</span>
             <div className="flex items-center gap-4">
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="flex items-center space-x-2 px-6 py-2 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>Call Now</span>
+                <span>{settings.callCtaLabel}</span>
               </a>
               <a
-                href={CONTACT_SMS_HREF}
+                href={smsHref}
                 className="flex items-center space-x-2 px-6 py-2 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>Text Us</span>
+                <span>{settings.textCtaLabel}</span>
               </a>
             </div>
           </div>
@@ -283,7 +289,7 @@ export default function RequestService() {
                         value={formData.phoneNumber}
                         onChange={updateField("phoneNumber")}
                         className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
-                        placeholder={CONTACT_PHONE_DISPLAY}
+                        placeholder={settings.phoneDisplay}
                       />
                     </div>
                     <div>

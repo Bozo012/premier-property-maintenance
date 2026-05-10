@@ -12,9 +12,14 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { CONTACT_SMS_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildSmsHref } from "../config/contact";
 
 export default function CustomerPortal() {
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const smsHref = buildSmsHref(settings.phoneE164);
   const features = [
     {
       icon: FileText,
@@ -87,7 +92,7 @@ export default function CustomerPortal() {
             <Lock className="w-16 h-16 text-orange-500 mx-auto mb-6" />
             <h1 className="text-5xl mb-6">CUSTOMER PORTAL</h1>
             <p className="text-xl text-gray-300 mb-8">
-              Manage your properties, services, and billing all in one place
+              {settings.portalStatusMessage}
             </p>
           </div>
         </div>
@@ -256,14 +261,14 @@ export default function CustomerPortal() {
               to="/request-service"
               className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
             >
-              Request Your First Service
+              {settings.portalCtaLabel}
             </Link>
             <a
-              href={CONTACT_SMS_HREF}
+              href={smsHref}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
               <MessageSquare className="w-5 h-5" />
-              <span>Text Us</span>
+              <span>{settings.textCtaLabel}</span>
             </a>
           </div>
         </div>

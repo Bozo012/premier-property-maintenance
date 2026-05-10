@@ -16,9 +16,14 @@ import {
   Phone,
 } from "lucide-react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref } from "../config/contact";
 
 export default function Services() {
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
   const serviceCategories = [
     {
       icon: Wrench,
@@ -178,17 +183,17 @@ export default function Services() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Call {CONTACT_PHONE_DISPLAY}</span>
+                <span>{settings.callCtaLabel} {settings.phoneDisplay}</span>
               </a>
               <Link
                 to="/request-service"
                 className="w-full sm:w-auto px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
               >
-                Request Service
+                {settings.requestServiceCtaLabel}
               </Link>
             </div>
           </div>
@@ -233,10 +238,10 @@ export default function Services() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={CONTACT_PHONE_HREF}
+              href={phoneHref}
               className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
             >
-              Call to Discuss
+              {settings.callCtaLabel}
             </a>
             <Link
               to="/request-service"
