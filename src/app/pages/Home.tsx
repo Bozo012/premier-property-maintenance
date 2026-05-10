@@ -1,20 +1,56 @@
 import { Link } from "react-router-dom";
-import { Phone, MessageSquare, Wrench, Home as HomeIcon, Building2, Paintbrush, Droplets, CheckCircle, Shield } from "lucide-react";
+import {
+  Phone,
+  MessageSquare,
+  Wrench,
+  Home as HomeIcon,
+  Building2,
+  Paintbrush,
+  Droplets,
+  CheckCircle,
+  Shield,
+  type LucideIcon,
+} from "lucide-react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref, buildSmsHref } from "../config/contact";
+
+const highlightIconMap: Record<string, LucideIcon> = {
+  carpentry: Building2,
+  emergency: Shield,
+  "general-repairs": Wrench,
+  hvac: HomeIcon,
+  painting: Paintbrush,
+  plumbing: Droplets,
+};
+
+const highlightIcons: LucideIcon[] = [
+  Wrench,
+  Paintbrush,
+  Droplets,
+  HomeIcon,
+  Building2,
+  Shield,
+];
+
+function isInternalLink(href: string): boolean {
+  return href.startsWith("/");
+}
 
 export default function Home() {
-  const services = [
-    { icon: Wrench, title: "General Repairs", desc: "Quick fixes for any property issue" },
-    { icon: Paintbrush, title: "Painting", desc: "Interior & exterior painting" },
-    { icon: Droplets, title: "Plumbing", desc: "Professional plumbing services" },
-    { icon: HomeIcon, title: "HVAC", desc: "Heating & cooling maintenance" },
-    { icon: Building2, title: "Carpentry", desc: "Custom woodwork & repairs" },
-    { icon: Shield, title: "Emergency", desc: "24/7 emergency response" },
-  ];
+  const {
+    content: { promotions, serviceHighlights, settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
+  const smsHref = buildSmsHref(settings.phoneE164);
+  const services = serviceHighlights.map((service, index) => ({
+    desc: service.description ?? "",
+    icon:
+      highlightIconMap[service.slug] ?? highlightIcons[index % highlightIcons.length],
+    title: service.title,
+  }));
 
   const stats = [
-    
     { value: "24/7", label: "Emergency Response" },
     { value: "100%", label: "Satisfaction Rate" },
     { value: "< 2hrs", label: "Average Response" },
@@ -26,41 +62,85 @@ export default function Home() {
       <section className="bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl mb-6">
-              ONE CALL. EVERY REPAIR.<br />EVERY PROPERTY.
+            <h1 className="mb-6 whitespace-pre-line text-5xl md:text-6xl">
+              {settings.heroHeadline}
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              Professional property maintenance and repair services for residential and commercial properties.
+              {settings.heroSubheadline}
             </p>
 
             {/* Primary CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Call Now</span>
+                <span>{settings.callCtaLabel}</span>
               </a>
               <a
-                href={CONTACT_SMS_HREF}
+                href={smsHref}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white text-lg rounded-lg transition-colors"
               >
                 <MessageSquare className="w-5 h-5" />
-                <span>Text Us</span>
+                <span>{settings.textCtaLabel}</span>
               </a>
               <Link
                 to="/request-service"
                 className="w-full sm:w-auto px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-lg rounded-lg transition-colors"
               >
-                Request Service
+                {settings.requestServiceCtaLabel}
               </Link>
             </div>
 
-            <p className="text-gray-400 text-sm">{CONTACT_PHONE_DISPLAY} • Available 24/7</p>
+            <p className="text-gray-400 text-sm">
+              {settings.phoneDisplay} • {settings.availabilityText}
+            </p>
           </div>
         </div>
       </section>
+
+      {promotions.length > 0 ? (
+        <section className="bg-[#161616] border-b border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+              {promotions.map((promotion) => (
+                <div
+                  key={promotion.id}
+                  className="rounded-lg border border-orange-500/30 bg-[#0f0f0f] p-5"
+                >
+                  <div className="space-y-2">
+                    <p className="text-sm uppercase tracking-[0.18em] text-orange-500">
+                      Promotion
+                    </p>
+                    <h2 className="text-2xl">{promotion.title}</h2>
+                    {promotion.description ? (
+                      <p className="text-sm text-gray-300">{promotion.description}</p>
+                    ) : null}
+                    {promotion.buttonLink && promotion.buttonText ? (
+                      isInternalLink(promotion.buttonLink) ? (
+                        <Link
+                          to={promotion.buttonLink}
+                          className="inline-block rounded-lg border border-orange-500 px-5 py-3 text-sm text-orange-500 transition-colors hover:bg-orange-500 hover:text-white"
+                        >
+                          {promotion.buttonText}
+                        </Link>
+                      ) : (
+                        <a
+                          href={promotion.buttonLink}
+                          className="inline-block rounded-lg border border-orange-500 px-5 py-3 text-sm text-orange-500 transition-colors hover:bg-orange-500 hover:text-white"
+                        >
+                          {promotion.buttonText}
+                        </a>
+                      )
+                    ) : null}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* Stats Panel */}
       <section className="bg-[#0f0f0f] border-b border-gray-800">
@@ -154,11 +234,11 @@ export default function Home() {
                   placeholder="Your Name"
                   className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
                 />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
-                />
+                <select className="w-full px-4 py-3 bg-[#0f0f0f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500">
+                  <option>Preferred Contact Method</option>
+                  <option>Phone Call</option>
+                  <option>Text Message</option>
+                </select>
                 <input
                   type="tel"
                   placeholder="Phone Number"
@@ -237,28 +317,28 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl mb-6">TAKE THE STRESS OUT OF IT</h2>
           <p className="text-xl mb-8 text-orange-50">
-            Professional maintenance you can trust. Available 24/7 for emergencies.
+            {settings.emergencyMessage}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={CONTACT_PHONE_HREF}
+              href={phoneHref}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 text-lg rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call {CONTACT_PHONE_DISPLAY}</span>
+              <span>{settings.callCtaLabel} {settings.phoneDisplay}</span>
             </a>
             <a
-              href={CONTACT_SMS_HREF}
+              href={smsHref}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 text-lg rounded-lg transition-colors"
             >
               <MessageSquare className="w-5 h-5" />
-              <span>Text Us</span>
+              <span>{settings.textCtaLabel}</span>
             </a>
             <Link
               to="/request-service"
               className="w-full sm:w-auto px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-orange-500 text-lg rounded-lg transition-colors"
             >
-              Request Service Online
+              {settings.requestServiceCtaLabel}
             </Link>
           </div>
         </div>

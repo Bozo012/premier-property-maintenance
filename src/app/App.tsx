@@ -7,21 +7,24 @@ import RequestService from './pages/RequestService';
 import HowItWorks from './pages/HowItWorks';
 import CustomerPortal from './pages/CustomerPortal';
 import NotFound from './pages/NotFound';
+import { WebsiteContentProvider } from './content/website-content-provider';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Root />}>
-          <Route index element={<Home />} />
-          <Route path="services" element={<Services />} />
-          <Route path="rental-properties" element={<RentalProperties />} />
-          <Route path="request-service" element={<RequestService />} />
-          <Route path="how-it-works" element={<HowItWorks />} />
-          <Route path="customer-portal" element={<CustomerPortal />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <WebsiteContentProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Root />}>
+            <Route index element={<Home />} />
+            <Route path="services" element={<Services />} />
+            <Route path="rental-properties" element={<RentalProperties />} />
+            <Route path="request-service" element={<RequestService />} />
+            <Route path="how-it-works" element={<HowItWorks />} />
+            <Route path="customer-portal" element={<CustomerPortal />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </WebsiteContentProvider>
   );
 }

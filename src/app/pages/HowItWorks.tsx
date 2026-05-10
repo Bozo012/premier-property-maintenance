@@ -13,9 +13,15 @@ import {
   Users,
 } from "lucide-react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref, buildSmsHref } from "../config/contact";
 
 export default function HowItWorks() {
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
+  const smsHref = buildSmsHref(settings.phoneE164);
   const steps = [
     {
       icon: Phone,
@@ -23,9 +29,9 @@ export default function HowItWorks() {
       title: "CONTACT US",
       description: "Reach out via phone, text, or online form",
       details: [
-        `Call or text us at ${CONTACT_PHONE_DISPLAY}`,
+        `Call or text us at ${settings.phoneDisplay}`,
         "Submit a request through our online form",
-        "Available 24/7 for emergencies",
+        settings.availabilityText,
         "Get immediate acknowledgment",
       ],
     },
@@ -126,17 +132,17 @@ export default function HowItWorks() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-5 h-5" />
-                <span>Call {CONTACT_PHONE_DISPLAY}</span>
+                <span>{settings.callCtaLabel} {settings.phoneDisplay}</span>
               </a>
               <Link
                 to="/request-service"
                 className="w-full sm:w-auto px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
               >
-                Request Service
+                {settings.requestServiceCtaLabel}
               </Link>
             </div>
           </div>
@@ -200,10 +206,10 @@ export default function HowItWorks() {
                 Speak directly with our team for immediate assistance
               </p>
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
-                {CONTACT_PHONE_DISPLAY}
+                {settings.phoneDisplay}
               </a>
             </div>
 
@@ -214,10 +220,10 @@ export default function HowItWorks() {
                 Quick and convenient communication via text message
               </p>
               <a
-                href={CONTACT_SMS_HREF}
+                href={smsHref}
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
-                Text Us Now
+                {settings.textCtaLabel}
               </a>
             </div>
 
@@ -231,7 +237,7 @@ export default function HowItWorks() {
                 to="/request-service"
                 className="block w-full px-6 py-3 bg-orange-500 hover:bg-orange-500 text-white rounded-lg transition-colors"
               >
-                Request Service
+                {settings.requestServiceCtaLabel}
               </Link>
             </div>
           </div>
@@ -282,7 +288,7 @@ export default function HowItWorks() {
             <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-6">
               <h3 className="text-xl mb-2">Do you offer emergency services?</h3>
               <p className="text-gray-400">
-                Yes! We're available 24/7 for emergency situations like water leaks, electrical issues, or lock-outs. Call anytime at {CONTACT_PHONE_DISPLAY}.
+                Yes! We&apos;re available for emergency situations like water leaks, electrical issues, or lock-outs. Call anytime at {settings.phoneDisplay}.
               </p>
             </div>
 
@@ -312,24 +318,24 @@ export default function HowItWorks() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={CONTACT_PHONE_HREF}
+              href={phoneHref}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Phone className="w-5 h-5" />
-              <span>Call {CONTACT_PHONE_DISPLAY}</span>
+              <span>{settings.callCtaLabel} {settings.phoneDisplay}</span>
             </a>
             <a
-              href={CONTACT_SMS_HREF}
+              href={smsHref}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-white text-orange-500 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <MessageSquare className="w-5 h-5" />
-              <span>Text Us</span>
+              <span>{settings.textCtaLabel}</span>
             </a>
             <Link
               to="/request-service"
               className="w-full sm:w-auto px-8 py-4 border-2 border-white text-white hover:bg-white hover:text-orange-500 rounded-lg transition-colors"
             >
-              Request Service Online
+              {settings.requestServiceCtaLabel}
             </Link>
           </div>
         </div>

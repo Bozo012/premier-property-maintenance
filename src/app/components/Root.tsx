@@ -2,11 +2,17 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { Phone, MessageSquare, Menu, X } from "lucide-react";
 import { useState } from "react";
 
-import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_HREF, CONTACT_SMS_HREF } from "../config/contact";
+import { useWebsiteContent } from "../content/website-content-provider";
+import { buildPhoneHref, buildSmsHref } from "../config/contact";
 
 export default function Root() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {
+    content: { settings },
+  } = useWebsiteContent();
+  const phoneHref = buildPhoneHref(settings.phoneE164);
+  const smsHref = buildSmsHref(settings.phoneE164);
 
   const navLinks = [
     { path: "/", label: "Home" },
@@ -51,17 +57,17 @@ export default function Root() {
             {/* CTA Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               <a
-                href={CONTACT_PHONE_HREF}
+                href={phoneHref}
                 className="flex items-center space-x-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                <span>{CONTACT_PHONE_DISPLAY}</span>
+                <span>{settings.phoneDisplay}</span>
               </a>
               <Link
                 to="/request-service"
                 className="px-6 py-3 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
               >
-                Request Service
+                {settings.requestServiceCtaLabel}
               </Link>
             </div>
 
@@ -93,18 +99,18 @@ export default function Root() {
               ))}
               <div className="pt-4 space-y-3">
                 <a
-                  href={CONTACT_PHONE_HREF}
+                  href={phoneHref}
                   className="flex items-center justify-center space-x-2 w-full px-6 py-3 bg-orange-500 text-white rounded-lg"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>{CONTACT_PHONE_DISPLAY}</span>
+                  <span>{settings.phoneDisplay}</span>
                 </a>
                 <Link
                   to="/request-service"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-center w-full px-6 py-3 border border-orange-500 text-orange-500 rounded-lg"
                 >
-                  Request Service
+                  {settings.requestServiceCtaLabel}
                 </Link>
               </div>
             </nav>
@@ -130,7 +136,7 @@ export default function Root() {
               />
               <h3 className="text-lg mb-4">Premier Property Maintenance</h3>
               <p className="text-gray-400 text-sm">
-                Professional property maintenance and repair services for residential and commercial properties.
+                {settings.serviceAreaSummary}
               </p>
             </div>
             <div>
@@ -153,12 +159,12 @@ export default function Root() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4" />
-                  <a href={CONTACT_PHONE_HREF} className="hover:text-orange-500">{CONTACT_PHONE_DISPLAY}</a>
+                  <a href={phoneHref} className="hover:text-orange-500">{settings.phoneDisplay}</a>
                 </li>
                 <li className="flex items-center space-x-2">
                   <MessageSquare className="w-4 h-4" />
-                  <a href={CONTACT_SMS_HREF} className="hover:text-orange-500">
-                    Text us
+                  <a href={smsHref} className="hover:text-orange-500">
+                    {settings.textCtaLabel}
                   </a>
                 </li>
               </ul>
