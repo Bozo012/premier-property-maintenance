@@ -152,6 +152,16 @@ export default function Root() {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link to="/how-it-works" className="hover:text-orange-500">How It Works</Link></li>
                 <li><Link to="/customer-portal" className="hover:text-orange-500">Customer Portal</Link></li>
+                <li>
+                  <a
+                    href="https://app.ppmnky.com/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-orange-500"
+                  >
+                    Staff Login
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
