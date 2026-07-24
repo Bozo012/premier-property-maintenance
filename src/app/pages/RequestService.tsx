@@ -64,6 +64,7 @@ export default function RequestService() {
   const [formStep, setFormStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<ServiceRequestPayload>(initialFormData);
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -113,7 +114,7 @@ export default function RequestService() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(trimPayload(formData)),
+        body: JSON.stringify({ ...trimPayload(formData), _hp: honeypot }),
       });
 
       let responseBody: { success?: boolean; message?: string; error?: string } | null = null;
@@ -129,6 +130,7 @@ export default function RequestService() {
 
       setSubmitted(true);
       setFormData(initialFormData);
+      setHoneypot("");
       setFormStep(1);
     } catch (error) {
       setErrorMessage(
@@ -244,6 +246,18 @@ export default function RequestService() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot field — left empty by real users, hidden from view and screen readers */}
+              <input
+                type="text"
+                name="_hp"
+                value={honeypot}
+                onChange={(event) => setHoneypot(event.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] w-px h-px overflow-hidden"
+              />
+
               {/* Step 1: Contact Information */}
               {formStep === 1 && (
                 <div className="space-y-6">
