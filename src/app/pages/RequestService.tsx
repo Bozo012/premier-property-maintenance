@@ -4,6 +4,18 @@ import { Phone, MessageSquare, CheckCircle } from "lucide-react";
 import { useWebsiteContent } from "../content/website-content-provider";
 import { buildPhoneHref, buildSmsHref } from "../config/contact";
 
+// Mirrors packages/shared/schemas/website-service-request-payload.ts's
+// US_STATE_CODES in the Premier-CRM repo — kept in sync manually since
+// these are two separate repositories with no shared package between them.
+// Constraining this to a real state list (instead of free text) is what
+// prevents values like "ty" from ever reaching the CRM's structured column.
+const US_STATE_CODES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", "HI", "ID",
+  "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO",
+  "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA",
+  "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+] as const;
+
 type ServiceRequestPayload = {
   firstName: string;
   lastName: string;
@@ -401,16 +413,19 @@ export default function RequestService() {
                     </div>
                     <div>
                       <label htmlFor="state" className="block text-sm text-gray-400 mb-2">State *</label>
-                      <input
+                      <select
                         id="state"
                         name="state"
-                        type="text"
                         required
                         value={formData.state}
                         onChange={updateField("state")}
-                        className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
-                        placeholder="State"
-                      />
+                        className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-orange-500"
+                      >
+                        <option value="">Select state...</option>
+                        {US_STATE_CODES.map((code) => (
+                          <option key={code} value={code}>{code}</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label htmlFor="zipCode" className="block text-sm text-gray-400 mb-2">ZIP Code *</label>
