@@ -26,6 +26,10 @@ accounts, or queries customer-safe CRM data in the browser.
 - **Session boundary**: Forge establishes its own Supabase SSR cookie session on
   `app.ppmnky.com` and redirects successful customers to the authenticated
   Forge portal dashboard.
+- **Service requests**: `/request-service` remains a public, no-login channel
+  and posts to Forge CRM's `POST /api/v1/service-requests` endpoint via
+  `VITE_CRM_API_URL`; Forge creates or deduplicates the CRM customer/property
+  records and inserts the `service_requests` row.
 - **Configuration**: `.env.example` now uses `VITE_FORGE_PORTAL_ORIGIN`; the
   old `VITE_SUPABASE_URL`/`VITE_SUPABASE_PUBLISHABLE_KEY` browser configuration
   is intentionally removed from the marketing repo.

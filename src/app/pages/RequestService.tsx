@@ -3,6 +3,7 @@ import { Phone, MessageSquare, CheckCircle } from "lucide-react";
 
 import { useWebsiteContent } from "../content/website-content-provider";
 import { buildPhoneHref, buildSmsHref } from "../config/contact";
+import { buildServiceRequestBody, buildServiceRequestEndpoint } from "../service-requests/service-request-handoff";
 
 // Mirrors packages/shared/schemas/website-service-request-payload.ts's
 // US_STATE_CODES in the Premier-CRM repo — kept in sync manually since
@@ -62,11 +63,6 @@ const requiredFieldsByStep: Record<number, Array<keyof ServiceRequestPayload>> =
   3: ["serviceCategory", "priorityLevel", "problemDescription"],
 };
 
-const trimPayload = (payload: ServiceRequestPayload): ServiceRequestPayload =>
-  Object.fromEntries(
-    Object.entries(payload).map(([key, value]) => [key, value.trim()]),
-  ) as ServiceRequestPayload;
-
 export default function RequestService() {
   const {
     content: { settings },
@@ -111,9 +107,9 @@ export default function RequestService() {
       return;
     }
 
-    const crmApiUrl = import.meta.env.VITE_CRM_API_URL;
+    const serviceRequestEndpoint = buildServiceRequestEndpoint();
 
-    if (!crmApiUrl) {
+    if (!serviceRequestEndpoint) {
       setErrorMessage("Service requests are temporarily unavailable. Please call us for immediate assistance.");
       return;
     }
@@ -121,12 +117,12 @@ export default function RequestService() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${crmApiUrl}/api/v1/service-requests`, {
+      const response = await fetch(serviceRequestEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...trimPayload(formData), _hp: honeypot }),
+        body: JSON.stringify(buildServiceRequestBody(formData, honeypot)),
       });
 
       let responseBody: { success?: boolean; message?: string; error?: string } | null = null;
