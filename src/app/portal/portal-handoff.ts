@@ -1,4 +1,4 @@
-export type PortalAuthMode = "signin" | "request-access";
+export type PortalAuthMode = "signin" | "signup";
 
 const DEFAULT_FORGE_PORTAL_ORIGIN = "https://app.ppmnky.com";
 
@@ -35,8 +35,23 @@ export function buildPortalFormAction(mode: PortalAuthMode): string {
   return buildForgePortalUrl(
     mode === "signin"
       ? "/portal/handoff/sign-in"
-      : "/portal/handoff/request-access",
+      : "/portal/handoff/sign-up",
   );
+}
+
+export function buildCustomerPortalModePath(mode: PortalAuthMode): string {
+  return `/customer-portal?portalMode=${mode}`;
+}
+
+export function getPortalAuthModeFromSearch(search: string): PortalAuthMode {
+  const params = new URLSearchParams(search);
+  const requestedMode = params.get("portalMode") ?? params.get("mode") ?? params.get("authMode");
+
+  if (requestedMode === "signup" || requestedMode === "sign-up" || requestedMode === "request-access") {
+    return "signup";
+  }
+
+  return "signin";
 }
 
 export function getPortalStatusMessage(status: string | null): string | null {
