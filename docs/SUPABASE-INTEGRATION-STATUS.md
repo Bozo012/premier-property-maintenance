@@ -6,7 +6,35 @@ Branch: `main`
 
 ---
 
-## 1. Current state — customer portal is real
+## 1. Current state — public portal doorway hands off to Forge
+
+The marketing site owns the public `/customer-portal` presentation only. It no
+longer creates Supabase sessions, stores customer portal tokens, links customer
+accounts, or queries customer-safe CRM data in the browser.
+
+- **Public route**: `src/app/pages/CustomerPortal.tsx` keeps the Premier
+  Property Maintenance branded sign-in/request-access UI.
+- **Handoff**: the form posts directly to Forge-owned endpoints under
+  `VITE_FORGE_PORTAL_ORIGIN`:
+  - `POST /portal/handoff/sign-in`
+  - `POST /portal/handoff/request-access`
+- **Password recovery**: "Forgot password?" links to Forge's
+  `/portal/forgot-password`; Forge owns reset email generation and the
+  `/update-password` callback.
+- **Request access**: the existing customer-account creation/linking path is
+  executed in Forge, not in this Vite app.
+- **Session boundary**: Forge establishes its own Supabase SSR cookie session on
+  `app.ppmnky.com` and redirects successful customers to the authenticated
+  Forge portal dashboard.
+- **Service requests**: `/request-service` remains a public, no-login channel
+  and posts to Forge CRM's `POST /api/v1/service-requests` endpoint via
+  `VITE_CRM_API_URL`; Forge creates or deduplicates the CRM customer/property
+  records and inserts the `service_requests` row.
+- **Configuration**: `.env.example` now uses `VITE_FORGE_PORTAL_ORIGIN`; the
+  old `VITE_SUPABASE_URL`/`VITE_SUPABASE_PUBLISHABLE_KEY` browser configuration
+  is intentionally removed from the marketing repo.
+
+## 2. Historical state — direct website Supabase integration retired
 
 The customer portal (`/customer-portal`) is wired to real Supabase Auth and real
 CRM data. This is a genuine integration, not a mock:

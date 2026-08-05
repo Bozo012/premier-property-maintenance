@@ -6,7 +6,6 @@ import RentalProperties from './pages/RentalProperties';
 import RequestService from './pages/RequestService';
 import HowItWorks from './pages/HowItWorks';
 import CustomerPortal from './pages/CustomerPortal';
-import CustomerPortalConfirmed from './pages/CustomerPortalConfirmed';
 import NotFound from './pages/NotFound';
 import { WebsiteContentProvider } from './content/website-content-provider';
 
@@ -22,7 +21,6 @@ export default function App() {
             <Route path="request-service" element={<RequestService />} />
             <Route path="how-it-works" element={<HowItWorks />} />
             <Route path="customer-portal" element={<CustomerPortal />} />
-            <Route path="customer-portal/confirmed" element={<CustomerPortalConfirmed />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
