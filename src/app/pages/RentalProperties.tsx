@@ -11,10 +11,13 @@ import {
   DollarSign,
   Star,
   TrendingUp,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 import { useWebsiteContent } from "../content/website-content-provider";
 import { buildPhoneHref } from "../config/contact";
+import { buildCustomerPortalModePath } from "../portal/portal-handoff";
 
 export default function RentalProperties() {
   const {
@@ -134,6 +137,52 @@ export default function RentalProperties() {
               >
                 {settings.requestServiceCtaLabel}
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Portal Access */}
+      <section className="bg-[#0f0f0f] border-b border-gray-800 py-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#1a1a1a] border border-gray-800 rounded-lg p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 items-center">
+              <div>
+                <h2 className="text-3xl mb-3">LANDLORD PORTAL ACCESS</h2>
+                <p className="text-gray-300 mb-4">
+                  Sign in or create a portal account to manage service history, properties, invoices, and communication for your rental portfolio.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-gray-400">
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-orange-500" />
+                    Multiple properties
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-orange-500" />
+                    Service history
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-orange-500" />
+                    Messages and billing
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+                <Link
+                  to={buildCustomerPortalModePath("signin")}
+                  className="flex items-center justify-center gap-2 px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors whitespace-nowrap"
+                >
+                  <LogIn className="w-5 h-5" />
+                  <span>Sign In</span>
+                </Link>
+                <Link
+                  to={buildCustomerPortalModePath("signup")}
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors whitespace-nowrap"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  <span>Sign Up</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

@@ -16,6 +16,7 @@ import { buildSmsHref } from "../config/contact";
 import {
   buildForgePortalUrl,
   buildPortalFormAction,
+  getPortalAuthModeFromSearch,
   getPortalStatusMessage,
   type PortalAuthMode,
 } from "../portal/portal-handoff";
@@ -59,7 +60,10 @@ export default function CustomerPortal() {
   } = useWebsiteContent();
   const smsHref = buildSmsHref(settings.phoneE164);
 
-  const [authMode, setAuthMode] = useState<PortalAuthMode>("signin");
+  const [authMode, setAuthMode] = useState<PortalAuthMode>(() => {
+    if (typeof window === "undefined") return "signin";
+    return getPortalAuthModeFromSearch(window.location.search);
+  });
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -103,7 +107,7 @@ export default function CustomerPortal() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="bg-[#0f0f0f] border border-gray-800 rounded-lg p-8">
               <h2 className="text-3xl mb-6">
-                {authMode === "signin" ? "SIGN IN" : "REQUEST ACCESS"}
+                {authMode === "signin" ? "SIGN IN" : "SIGN UP"}
               </h2>
 
               {statusMessage ? (
@@ -128,7 +132,7 @@ export default function CustomerPortal() {
               >
                 <input type="hidden" name="source" value="marketing-customer-portal" />
 
-                {authMode === "request-access" ? (
+                {authMode === "signup" ? (
                   <div>
                     <label htmlFor="portal-full-name" className="block text-sm text-gray-400 mb-2">
                       Full Name
@@ -173,7 +177,7 @@ export default function CustomerPortal() {
                     name="password"
                     type="password"
                     required
-                    minLength={authMode === "request-access" ? 8 : undefined}
+                    minLength={authMode === "signup" ? 8 : undefined}
                     autoComplete={authMode === "signin" ? "current-password" : "new-password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -205,10 +209,10 @@ export default function CustomerPortal() {
                   {authSubmitting
                     ? authMode === "signin"
                       ? "Signing In..."
-                      : "Requesting Access..."
+                      : "Creating Account..."
                     : authMode === "signin"
                       ? "Sign In"
-                      : "Request Access"}
+                      : "Sign Up"}
                 </button>
               </form>
 
@@ -218,10 +222,10 @@ export default function CustomerPortal() {
                     Don&apos;t have an account?{" "}
                     <button
                       type="button"
-                      onClick={() => switchAuthMode("request-access")}
+                      onClick={() => switchAuthMode("signup")}
                       className="text-orange-500 hover:text-orange-400"
                     >
-                      Request Access
+                      Sign Up
                     </button>
                   </p>
                 ) : (
@@ -270,9 +274,19 @@ export default function CustomerPortal() {
             Request service to get started and we&apos;ll set up your portal access
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                switchAuthMode("signup");
+                window.scrollTo({ top: 280, behavior: "smooth" });
+              }}
+              className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
+              Sign Up for Portal Access
+            </button>
             <Link
               to="/request-service"
-              className="w-full sm:w-auto px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+              className="w-full sm:w-auto px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors"
             >
               {settings.portalCtaLabel}
             </Link>

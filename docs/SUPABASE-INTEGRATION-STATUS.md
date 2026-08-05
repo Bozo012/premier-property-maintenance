@@ -13,11 +13,14 @@ longer creates Supabase sessions, stores customer portal tokens, links customer
 accounts, or queries customer-safe CRM data in the browser.
 
 - **Public route**: `src/app/pages/CustomerPortal.tsx` keeps the Premier
-  Property Maintenance branded sign-in/request-access UI.
+  Property Maintenance branded sign-in/sign-up UI.
 - **Handoff**: the form posts directly to Forge-owned endpoints under
   `VITE_FORGE_PORTAL_ORIGIN`:
   - `POST /portal/handoff/sign-in`
-  - `POST /portal/handoff/request-access`
+  - `POST /portal/handoff/sign-up`
+- **Rental properties route**: `/rental-properties` includes portal sign-in and
+  sign-up CTAs that preselect the correct `/customer-portal` mode while keeping
+  the marketing site as the public doorway.
 - **Password recovery**: "Forgot password?" links to Forge's
   `/portal/forgot-password`; Forge owns reset email generation and the
   `/update-password` callback.
