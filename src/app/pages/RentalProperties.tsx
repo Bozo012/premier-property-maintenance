@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Building2,
@@ -11,19 +12,18 @@ import {
   DollarSign,
   Star,
   TrendingUp,
-  LogIn,
-  UserPlus,
 } from "lucide-react";
 
 import { useWebsiteContent } from "../content/website-content-provider";
 import { buildPhoneHref } from "../config/contact";
-import { buildCustomerPortalModePath } from "../portal/portal-handoff";
+import { buildPortalFormAction, type PortalAuthMode } from "../portal/portal-handoff";
 
 export default function RentalProperties() {
   const {
     content: { settings },
   } = useWebsiteContent();
   const phoneHref = buildPhoneHref(settings.phoneE164);
+  const [portalMode, setPortalMode] = useState<PortalAuthMode>("signin");
   const benefits = [
     {
       icon: Clock,
@@ -167,21 +167,81 @@ export default function RentalProperties() {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
-                <Link
-                  to={buildCustomerPortalModePath("signin")}
-                  className="flex items-center justify-center gap-2 px-8 py-4 border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg transition-colors whitespace-nowrap"
-                >
-                  <LogIn className="w-5 h-5" />
-                  <span>Sign In</span>
-                </Link>
-                <Link
-                  to={buildCustomerPortalModePath("signup")}
-                  className="flex items-center justify-center gap-2 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors whitespace-nowrap"
-                >
-                  <UserPlus className="w-5 h-5" />
-                  <span>Sign Up</span>
-                </Link>
+              <div className="bg-[#0f0f0f] border border-gray-800 rounded-lg p-5 min-w-0 lg:min-w-[340px]">
+                <div className="flex rounded-lg border border-gray-800 p-1 mb-5">
+                  <button
+                    type="button"
+                    onClick={() => setPortalMode("signin")}
+                    className={`flex-1 rounded-md px-3 py-2 text-sm transition-colors ${
+                      portalMode === "signin" ? "bg-orange-500 text-white" : "text-gray-300 hover:text-white"
+                    }`}
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPortalMode("signup")}
+                    className={`flex-1 rounded-md px-3 py-2 text-sm transition-colors ${
+                      portalMode === "signup" ? "bg-orange-500 text-white" : "text-gray-300 hover:text-white"
+                    }`}
+                  >
+                    Sign Up
+                  </button>
+                </div>
+                <form action={buildPortalFormAction(portalMode)} method="post" className="space-y-4">
+                  <input type="hidden" name="source" value="marketing-rental-properties" />
+                  {portalMode === "signup" ? (
+                    <div>
+                      <label htmlFor="rental-portal-full-name" className="block text-sm text-gray-400 mb-2">
+                        Full Name
+                      </label>
+                      <input
+                        id="rental-portal-full-name"
+                        name="fullName"
+                        type="text"
+                        required
+                        autoComplete="name"
+                        className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                        placeholder="Full Name"
+                      />
+                    </div>
+                  ) : null}
+                  <div>
+                    <label htmlFor="rental-portal-email" className="block text-sm text-gray-400 mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      id="rental-portal-email"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                      placeholder="Email Address"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="rental-portal-password" className="block text-sm text-gray-400 mb-2">
+                      Password
+                    </label>
+                    <input
+                      id="rental-portal-password"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={portalMode === "signup" ? 8 : undefined}
+                      autoComplete={portalMode === "signin" ? "current-password" : "new-password"}
+                      className="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                  >
+                    {portalMode === "signin" ? "Sign In" : "Sign Up"}
+                  </button>
+                </form>
               </div>
             </div>
           </div>
